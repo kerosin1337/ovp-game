@@ -55,12 +55,21 @@ main{
 .apple{
     background: url("../img/apple.png") center no-repeat;
     background-size: contain;
+    animation: rotate infinite .6s linear;
 }
 .orange{
     background: url("../img/orange.png") center no-repeat;
     background-size: contain;
+    animation: rotate infinite .7s linear;
 }
 .banana{
     background: url("../img/banana.png") center no-repeat;
     background-size: contain;
+    animation: rotate infinite .8s linear;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
 }
