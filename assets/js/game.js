@@ -13,24 +13,53 @@ class Game {
             m2: 0,
             s1: 0,
             s2: 0
-        }
+        };
+        this.ended = false
+        this.pause = false
+        this.keyEvents()
     }
 
     start() {
         this.loop();
     }
 
+    keyEvents() {
+        addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.pause = !this.pause
+            }
+        })
+    }
+
     loop() {
         requestAnimationFrame(() => {
-            this.counterForTimer++;
-            if (this.counterForTimer % 60 === 0) {
-                this.timer();
-                this.randomFruitGenerate();
+            // this.counterForTimer++;
+            if (!this.pause) {
+                $('.apple').css('animation-play-state', 'running');
+                $('.banana').css('animation-play-state', 'running');
+                $('.orange').css('animation-play-state', 'running');
+                this.counterForTimer++
+                if (this.counterForTimer % 60 === 0) {
+                    this.timer();
+                    this.randomFruitGenerate();
+                }
+                if (this.hp <= 0) {
+                    this.end()
+                }
+                $('.pause').css('display', 'none').hide().fadeOut();
+                this.updateElements();
+                this.setParams();
+            } else if (this.pause) {
+                $('.pause').css('display', 'flex').show().fadeIn();
+                $('.apple').css('animation-play-state', 'paused');
+                $('.banana').css('animation-play-state', 'paused');
+                $('.orange').css('animation-play-state', 'paused');
+            }
+            if (!this.ended) {
+                this.loop()
             }
 
-            this.updateElements();
-            this.setParams();
-            this.loop();
+            // this.loop();
         });
     }
 
@@ -89,6 +118,23 @@ class Game {
             return true;
         }
         return false;
+    }
+
+    end() {
+        this.ended = true;
+        let time = this.time;
+        if (time.s1 >= 1 || time.m2 >= 1 || time.m1 >= 1) {
+            $('#playerName').html(`Поздравляем, ${this.name}`);
+            $('#endTime').html(`Ваше время: ${time.m1}${time.m2}:${time.s1}${time.s2}`);
+            $('#collectedFruits').html(`Вы собрали ${this.points} фруктов`);
+            $('#congratulation').html(`Вы выиграли`);
+        } else {
+            $('#playerName').html(`Жаль, ${this.name}`);
+            $('#endTime').html(`Ваше время: ${time.m1}${time.m2}:${time.s1}${time.s2}`);
+            $('#collectedFruits').html(`Вы собрали ${this.points} фруктов`);
+            $('#congratulation').html(`Вы проиграли`);
+        }
+        go('end', 'panel d-flex justify-content-center align-items-center');
     }
 }
 
@@ -169,13 +215,25 @@ class Player extends Drawable {
         this.y = this.game.$zone.height() - this.h;
 
         this.speedPerFrame = 20;
-
+        this.skillTimer = 0;
+        this.couldTimer = 0;
         this.keys = {
             ArrowLeft: false,
-            ArrowRight: false
+            ArrowRight: false,
+            Space: false
         }
         this.createElement();
         this.bindKeyEvents();
+    }
+
+    applySkill() {
+        for (let i = 1; i < this.game.elements.length; i++) {
+            if (this.game.elements[i].x < this.x + (this.w / 2)) {
+                this.game.elements[i].x += 15;
+            } else if (this.game.elements[i].x > this.x + (this.w / 2)) {
+                this.game.elements[i].x -= 15
+            }
+        }
     }
 
     bindKeyEvents() {
@@ -196,6 +254,21 @@ class Player extends Drawable {
             this.offset.x = this.speedPerFrame;
         } else {
             this.offset.x = 0;
+        }
+        if (this.keys.Space && this.couldTimer === 0) {
+            this.skillTimer++;
+            $('#skill').html(`Осталось ${Math.ceil((240 - this.skillTimer) / 60)}`)
+            this.applySkill()
+        }
+        if (this.skillTimer > 240 || (!this.keys.Space && this.skillTimer > 1)) {
+            this.couldTimer++;
+            $('#skill').html(`В откате ${Math.ceil((300 - this.couldTimer) / 60)}`);
+            this.keys.Space = false;
+        }
+        if (this.couldTimer > 300) {
+            this.couldTimer = 0;
+            this.skillTimer = 0;
+            $('#skill').html('Готово')
         }
         super.update();
     }
