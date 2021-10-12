@@ -16,7 +16,7 @@ let nav = () => {
                 break;
             case 'restart':
                 go('game', 'd-block');
-                $('.elements').remove().fadeOut('slow');
+                $('.elements').remove().fadeOut(500);
                 $('#game').append(`<div class="elements"></div>`).fadeIn();
                 break;
         }
@@ -30,8 +30,8 @@ let go = (page, attribute) => {
     $(`#${page}`).fadeIn(500).attr('class', attribute);
     pages.forEach(e => {
         if (page != e) {
-            $(`#${e}`).fadeOut('slow').attr('class', 'd-none');
-            // $(`#${e}`).fadeOut('slow').attr('class', 'd-none');
+            $(`#${e}`).fadeOut(500).attr('class', 'd-none');
+            // $(`#${e}`).fadeOut(500).attr('class', 'd-none');
         }
     });
 };
