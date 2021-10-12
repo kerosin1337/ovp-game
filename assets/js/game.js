@@ -124,15 +124,15 @@ class Game {
         this.ended = true;
         let time = this.time;
         if (time.s1 >= 1 || time.m2 >= 1 || time.m1 >= 1) {
-            $('#playerName').html(`Поздравляем, ${this.name}`);
-            $('#endTime').html(`Ваше время: ${time.m1}${time.m2}:${time.s1}${time.s2}`);
-            $('#collectedFruits').html(`Вы собрали ${this.points} фруктов`);
-            $('#congratulation').html(`Вы выиграли`);
+            $('#playerName').html(`Поздравляем, ${this.name}`).fadeIn();
+            $('#endTime').html(`Ваше время: ${time.m1}${time.m2}:${time.s1}${time.s2}`).fadeIn();
+            $('#collectedFruits').html(`Вы собрали ${this.points} фруктов`).fadeIn();
+            $('#congratulation').html(`Вы выиграли`).fadeIn();
         } else {
-            $('#playerName').html(`Жаль, ${this.name}`);
-            $('#endTime').html(`Ваше время: ${time.m1}${time.m2}:${time.s1}${time.s2}`);
-            $('#collectedFruits').html(`Вы собрали ${this.points} фруктов`);
-            $('#congratulation').html(`Вы проиграли`);
+            $('#playerName').html(`Жаль, ${this.name}`).fadeIn();
+            $('#endTime').html(`Ваше время: ${time.m1}${time.m2}:${time.s1}${time.s2}`).fadeIn();
+            $('#collectedFruits').html(`Вы собрали ${this.points} фруктов`).fadeIn();
+            $('#congratulation').html(`Вы проиграли`).fadeIn();
         }
         go('end', 'panel d-flex justify-content-center align-items-center');
     }
@@ -228,11 +228,13 @@ class Player extends Drawable {
 
     applySkill() {
         for (let i = 1; i < this.game.elements.length; i++) {
-            if (this.game.elements[i].x < this.x + (this.w / 2)) {
+            this.game.elements[i].y -= this.game.elements[i].offset.y;
+            if (((this.x - 15) + this.w / 2) > this.game.elements[i].x) {
                 this.game.elements[i].x += 15;
-            } else if (this.game.elements[i].x > this.x + (this.w / 2)) {
+            } else if (((this.x + 15) + this.w / 2) < this.game.elements[i].x) {
                 this.game.elements[i].x -= 15
             }
+            console.log(this.game.elements[i].x, this.x)
         }
     }
 
