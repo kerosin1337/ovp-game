@@ -61,6 +61,7 @@ main {
 .player {
     background: url("../img/player.png") center no-repeat;
     background-size: contain;
+    z-index: 100
 }
 
 .apple {

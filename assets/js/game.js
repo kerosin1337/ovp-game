@@ -202,7 +202,9 @@ class Drawable {
     }
 
     removeElement() {
-        this.$element.remove();
+        this.$element.fadeOut(500, 'linear', (e) => {
+            this.$element.remove();
+        });
     }
 }
 
